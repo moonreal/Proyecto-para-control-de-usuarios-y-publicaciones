@@ -25,16 +25,38 @@
                 <button class="button" id="BuscarU">Buscar-por-Username</button><br>
                 <button class="button" id="ListarU">Listar</button><br>
             </div>
-            <div class="col-5" id="FormAgregar" style="display: none;">
-                <input type="text" placeholder="Ingresa tu nombre" id="inombre"></input><br>
-                <input type="text" placeholder="Ingresa tu Nombre de Usuario" id="inombreusua"> </input><br>
-                <input type="text" placeholder="Ingresa tu Email" id="iemail"></input><br>
-                <input type="text" placeholder="Ingresa tu Webpage" id="iwebpage"></input><br>
-                <input type="text" placeholder="Ingresa tu Edad" id="iedad"></input><br>
-                <button id="ConfirmarA">Confirmar</button>
-            </div>
-            <div class="col-4" id="prueba">
+            <div class="col-5">
+                <div id="FormAgregar" style="display: none;">
+                    <input type="text" placeholder="Ingresa tu nombre" id="inombre"></input><br>
+                    <input type="text" placeholder="Ingresa tu Nombre de Usuario" id="inombreusua"> </input><br>
+                    <input type="text" placeholder="Ingresa tu Email" id="iemail"></input><br>
+                    <input type="text" placeholder="Ingresa tu Webpage" id="iwebpage"></input><br>
+                    <input type="text" placeholder="Ingresa tu Edad" id="iedad"></input><br>
+                    <button id="ConfirmarA">Confirmar</button>
+                </div>
 
+                <div id="FormBuscar">
+                    <input type="text" placeholder="Ingresa el Nombre de Usuario" id="inombreusua1"> </input><br>
+                    <input type="text" placeholder="Nombre" id="inombre1" readonly></input><br>
+                    <input type="text" placeholder="Email" id="iemail1" readonly></input><br>
+                    <input type="text" placeholder="Webpage" id="iwebpage1" readonly></input><br>
+                    <input type="text" placeholder="Edad" id="iedad1" readonly></input><br></input>
+                    <button id="ConfirmarB">Buscar</button>
+                    <p id="error"></p>
+                </div>
+            </div>
+
+            <div class="col-4" id="prueba">
+                </table>
+            </div>
+            <div class="row">
+                Post de Usuarios
+                <div>
+                    Nombre de Usuario:
+                    <select id="usernameS">
+                    </select>
+                </div>
+                <div class="col" id="Resultadopost"></div>
             </div>
         </div>
     </div>
@@ -617,9 +639,20 @@
         let btnagregar = document.getElementById("AgregarU");
         let btnconfirmaA = document.getElementById("ConfirmarA");
         let btnbuscar = document.getElementById("BuscarU");
+        let btnconfirmarB = document.getElementById("ConfirmarB");
         let btnlistar = document.getElementById("ListarU");
+        let btnconfirmarU = document.getElementById("ConfirmarU")
+
         btnagregar.addEventListener('click', () => {
             var div = document.getElementById("FormAgregar");
+            if (div.style.display === "none") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        })
+        btnbuscar.addEventListener('click', () => {
+            var div = document.getElementById("FormBuscar");
             if (div.style.display === "none") {
                 div.style.display = "block";
             } else {
@@ -634,13 +667,58 @@
             let edad = document.getElementById("iedad").value;
             let usuario = new Usuario(nombre, nombreusua, email, webpage, edad);
             usuario.agregar(usuario);
-            console.log(base);
+            inombreusua.value = "";
+            inombre.value = "";
+            iemail.value = "";
+            iwebpage.value = "";
+            iedad.value = "";
+        })
+        btnconfirmarB.addEventListener('click', () => {
+            let nombreabuscar = document.getElementById("inombreusua1").value
+            for (let i = 0; i < base.length; i++) {
+                if (nombreabuscar == base[i].username) {
+                    error.innerHTML = "";
+                    inombre1.value = base[i].name;
+                    iemail1.value = base[i].email;
+                    iwebpage1.value = base[i].webpage;
+                    iedad1.value = base[i].age;
+                } else {
+                    inombre1.value = "";
+                    iemail1.value = "";
+                    iwebpage1.value = "";
+                    iedad1.value = "";
+                    error.innerHTML = "El username ingresado no se encuentra registrado"
+                }
+            }
         })
         btnlistar.addEventListener('click', () => {
-            let usuario = new Usuario();
-            let aux = usuario.listar();
-            prueba.innerHTML = aux
+            let usuario1 = new Usuario();
+            prueba.innerHTML = usuario1.listar();
+
         })
+        const select = document.getElementById('usernameS');
+        for (let i = 0; i < base.length; i++) {
+            const user = base[i];
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.text = user.username;
+            option.id = "opcion";
+            select.appendChild(option);
+        }
+
+        let username = document.querySelector('#usernameS');
+        username.addEventListener('change', () => {
+            let res = "";
+            console.log(username.value)
+            for (let j = 0; j < post.length; j++) {
+                if (post[j].userId == username.value) {
+                    res += "title: " + post[j].title + "\n " + "Body: " + post[j].body + "\n ";
+                }
+            }
+            Resultadopost.innerHTML = res;
+        })
+
+
 
 
     </script>
